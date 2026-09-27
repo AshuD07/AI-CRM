@@ -2,31 +2,31 @@ const mongoose = require("mongoose");
 
 const leadSchema = new mongoose.Schema({
     name: {
-        type: string,
+        type: String,
         required: true
     },
     email: {
-        type: string
+        type: String
     },
     phone: {
-        type: string
+        type: String
     },
     company: {
-        type: string
+        type: String
     },
     source: {
-        type: string,
+        type: String,
         enum: ["Website", "Advertisement", "Referral", "Cold_Call", "Social Media"]
     },
     status: {
-        type: string,
+        type: String,
         enum: ["New", "Contacted", "Qualified", "Converted", "Lost"],
-        default: "new"
+        default: "New"
     },
     
     assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: User
+        ref: "User"
     }
  },
     {
@@ -34,4 +34,4 @@ const leadSchema = new mongoose.Schema({
     }
 );
 
-module.exports = mongoose,model("Leads", leadSchema);
+module.exports = mongoose.model("Lead", leadSchema);

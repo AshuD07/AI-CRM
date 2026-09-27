@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const activitySchema = new mongoose.Schema({
     type: {
-        type: string,
+        type: String,
         enum: ["call", "email", "meeting","demo", "follow-up", "other"],
         required: true
     },
     description: {
-        type: string
+        type: String
     },
     customer: {
         type: mongoose.Schema.Types.ObjectId,

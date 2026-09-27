@@ -2,21 +2,21 @@ const mongoose = require("mongoose");
 
 const customerSchema = new mongoose.Schema({
     name: {
-        type: string,
+        type: String,
         required: true
     },
     email: {
-        type: string,
+        type: String,
         required: true,
     },
     phone: {
-        type: string
+        type: String
     },
     company: {
-        type: string 
+        type: String 
     },
     status: {
-        type: string,
+        type: String,
         enum: ["active", "inactive"],
         default: "active"
     }
