@@ -27,11 +27,23 @@ const getCustomer = async (req, res) => {
 const updateCustomer = async (req, res) => {
     const customer = await customerService.updateCustomer(req.params.id, req.body);
 
+    if(!customer) {
+        return res.status(404).json({
+            message: "Customer not found"
+        });
+    }
+
     res.status(200).json(customer);
 }
 
 const deleteCustomer = async (req, res) => {
-    await customerService.deleteCustomer(req.params.id);
+    const customer = await customerService.deleteCustomer(req.params.id);
+
+    if(!customer) {
+        return res.status(404).json({
+            message: "Customer not Found"
+        })
+    }
 
     res.status(200).json({
         message: "Customer deleted successfully"
