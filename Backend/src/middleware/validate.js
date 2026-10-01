@@ -1,7 +1,9 @@
-const validate = (schema) => {
+const validate = (schema, property = "body") => {
     return (req, res, next) => {
 
-        const { error } = schema.validate(req.body);
+        const { error, value } = schema.validate(req[property], {
+            abortEarly: false
+        });
 
         if (error) {
             return res.status(400).json({
@@ -9,10 +11,10 @@ const validate = (schema) => {
             });
         }
 
+        req[property] = value;
+
         next();
     };
 };
-
-
 
 module.exports = validate;

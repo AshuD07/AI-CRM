@@ -7,9 +7,26 @@ const createCustomer = async (req, res) => {
 };
 
 const getCustomers = async (req,res) => {
-    const customers = await customerService.getCustomers();
+    const page = req.query.page;
+    const limit = req.query.limit;
 
-    res.status(200).json(customers);
+    const filters = {};
+
+    if (req.query.status) {
+    filters.status = req.query.status;
+    }
+
+    if (req.query.search) {
+    filters.$or = [
+        { name: { $regex: req.query.search, $options: "i" } },
+        { email: { $regex: req.query.search, $options: "i" } },
+        { company: { $regex: req.query.search, $options: "i" } }
+    ];
+}
+
+    const result = await customerService.getCustomers(page, limit, filters);
+
+    res.status(200).json(result);
 }
 
 const getCustomer = async (req, res) => {
@@ -25,6 +42,13 @@ const getCustomer = async (req, res) => {
 }
 
 const updateCustomer = async (req, res) => {
+
+    if (Object.keys(req.body).length === 0) {
+        return res.status(400).json({
+            message: "No fields provided for update"
+        });
+    }
+
     const customer = await customerService.updateCustomer(req.params.id, req.body);
 
     if(!customer) {

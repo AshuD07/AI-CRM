@@ -6,8 +6,22 @@ const createCustomer = async (customerData) => {
     return customer;
 };
 
-const getCustomers = async () => {
-    const customers = await Customer.find();
+const getCustomers = async (page, limit, filters) => {
+    const skip = (page - 1) * limit;
+    const customers = await Customer.find(filters)
+                                    .sort({createdAt: -1})
+                                    .skip(skip)
+                                    .limit(limit);
+
+    const totalCustomers = await Customer.countDocuments(filters);
+    const totalPages = Math.ceil(totalCustomers / limit);
+    return {
+        customers,
+        currentPage: page,
+        limit,
+        totalCustomers,
+        totalPages
+    };
 
     return customers;
 }
@@ -19,7 +33,25 @@ const getCustomerById = async (id) => {
 }
 
 const updateCustomer = async (id, updateData) => {
-    const customer = await Customer.findByIdAndUpdate(id, updateData, {new: true});
+
+    const allowedFields = [
+        "name",
+        "email",
+        "phone",
+        "company",
+        "status",
+        "assignedTo"
+    ];
+
+    const allowedUpdates = {};
+
+    allowedFields.forEach((field) => {
+        if (updateData[field] !== undefined) {
+            allowedUpdates[field] = updateData[field];
+        }
+    });
+
+    const customer = await Customer.findByIdAndUpdate(id, allowedUpdates, {new: true});
 
     return customer;
 }
