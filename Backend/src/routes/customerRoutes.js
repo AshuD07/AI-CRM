@@ -11,15 +11,17 @@ const {
 const { createCustomerSchema, updateCustomerSchema } = require("../Validators/customerValidator");
 const validate = require("../middleware/validate");
 const validateObjectId = require("../middleware/validateObjectId")
+const protect = require("../middleware/authMiddleware");
+const requireRole = require("../middleware/roleMiddleware");
 const customerQuerySchema = require("../Validators/customerQueryValidator");
 
 const router = express.Router();
 
-router.post("/", validate(createCustomerSchema), createCustomer);
-router.patch("/:id", validate(updateCustomerSchema), updateCustomer);
+router.post("/", protect, validate(createCustomerSchema), createCustomer);
+router.patch("/:id",protect, validate(updateCustomerSchema), updateCustomer);
 
-router.get('/', validate(customerQuerySchema, "query"), getCustomers);
-router.get('/:id', validateObjectId, getCustomer);
-router.delete("/:id", deleteCustomer);
+router.get('/', protect,  validate(customerQuerySchema, "query"), getCustomers);
+router.get('/:id',protect,  validateObjectId, getCustomer);
+router.delete("/:id", protect, requireRole("admin"), deleteCustomer);
 
 module.exports = router;
