@@ -3,22 +3,34 @@ const mongoose = require("mongoose");
 const customerSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     email: {
         type: String,
         required: true,
+        trim: true,
+        lowercase: true
     },
     phone: {
-        type: String
+        type: String,
+        required: true,
+        trim: true
     },
     company: {
-        type: String 
+        type: String,
+        trim: true
     },
     status: {
         type: String,
         enum: ["active", "inactive"],
         default: "active"
+    },
+
+    assignedTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     }
 },
    { 

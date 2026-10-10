@@ -22,8 +22,6 @@ const getCustomers = async (page, limit, filters) => {
         totalCustomers,
         totalPages
     };
-
-    return customers;
 }
 
 const getCustomerById = async (id) => {
@@ -51,13 +49,14 @@ const updateCustomer = async (id, updateData) => {
         }
     });
 
-    const customer = await Customer.findByIdAndUpdate(id, allowedUpdates, {new: true});
+    const customer = await Customer.findByIdAndUpdate(id, allowedUpdates, {new: true, runValidators: true});
 
     return customer;
 }
 
 const deleteCustomer = async (id) => {
-    await Customer.findByIdAndDelete(id);
+    const customer = await Customer.findByIdAndDelete(id);
+    return customer;
 };
 
 module.exports = { createCustomer, getCustomers, getCustomerById, updateCustomer, deleteCustomer };
